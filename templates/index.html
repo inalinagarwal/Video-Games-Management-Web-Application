@@ -5,34 +5,13 @@
 {% endblock %}
 
 {% block main %}
-    <table>
-        <thead>
-            <tr>
-                <th>Symbol</th>
-                <th>Name</th>
-                <th>Price</th>
-                <th>Shares</th>
-                <th>Total Cost</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for stock in stocks %}
-            <tr>
-                <td>{{ stock["symbol"] }}</td>
-                <td>{{ stock["name"] }}</td>
-                <td>{{ stock["price"]|usd }}</td>
-                <td>{{ stock["total"]|usd }}</td>
-                <td>{{ stock["value"]|usd }}</td>
-            </tr>
-            {% endfor %}
-            <tr>
-                <td>Cash Left</td>
-                <td>{{ cash|usd }}</td>
-            </tr>
-            <tr>
-                <td>Amount</td>
-                <td>{{ total_value|usd }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <h1 id = "index">
+        This website let's you maintain a gamer's list.
+    </h1>
+    <p id = "indexinfo">
+        You can add or delete games which you want to play to keep a track of all the games you have played till now
+    </p>
+    <p id = "info2">
+        You can also find information about a specific game, which will land you to to that game's wikipedia link.
+    </p>
 {% endblock %}

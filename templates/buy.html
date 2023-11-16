@@ -1,17 +1,17 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Buy
+    Add
 {% endblock %}
 
 {% block main %}
     <form action="/buy" method="post">
         <div class="mb-3">
-            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="symbol" name="symbol" placeholder="Stock's Symbol" type="text">
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="game" name="game" placeholder="Add Game" type="text">
         </div>
         <div class="mb-3">
-            <input class="form-control mx-auto w-auto" id="shares" name="shares" placeholder="Shares" type="integer">
+            <input class="form-control mx-auto w-auto" id="platform" name="platform" placeholder="Platform" type="text">
         </div>
-        <button class="btn btn-primary" type="submit">Buy</button>
+        <button class="btn btn-primary" type="submit">Add</button>
     </form>
 {% endblock %}

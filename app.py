@@ -60,24 +60,13 @@ def buy():
     if request.method == "POST":
 
         # Ensure username was submitted
-        symbol = request.form.get("symbol").upper()
-        shares = request.form.get("shares")
-        if not shares or not shares.isdigit() or int(shares) <= 0:
-            return apology("must provide symbol", 400)
-        if not symbol:
-            return apology("must provide symbol", 400)
-        elif not shares:
-            return apology("must provide shares", 400)
-        stock = lookup(symbol)
-        if not stock:
-            return apology("must provide symbol", 400)
-        price = stock["price"]
-        total_cost = price * int(shares)
-        cash = db.execute("SELECT cash FROM users WHERE id = ?", session["user_id"])[0]["cash"]
-        if total_cost > cash:
-            return apology("Not Enough Cash")
-        db.execute("UPDATE users SET cash = cash - ? WHERE id = ?", total_cost, session["user_id"])
-        db.execute("INSERT INTO transactions (user_id, symbol, shares, price) VALUES (?, ?, ?, ?)", session["user_id"], symbol, shares, price)
+        game = request.form.get("game")
+        platform = request.form.get("platform")
+        if not game:
+            return apology("must provide game", 400)
+        elif not platform:
+            return apology("must provide platform", 400)
+        db.execute("INSERT INTO games (user_id, game, platform) VALUES (?, ?, ?)", session["user_id"], game, platform)
         # Redirect user to home page
         return redirect("/")
     # User reached route via GET (as by clicking a link or via redirect)
@@ -89,18 +78,10 @@ def buy():
 @login_required
 def history():
     """Show history of transactions"""
-
     # Ensure username was submitted
-    transactions = db.execute("SELECT symbol, price, shares FROM transactions WHERE user_id = ?", session["user_id"])
-
-    for transaction in transactions:
-        quote = lookup(transaction["symbol"])
-        transaction["name"] = quote["name"]
-        transaction["price"] = quote["price"]
-
+    games = db.execute("SELECT * FROM games WHERE user_id = ?", session["user_id"])
     # Redirect user to home page
-    return render_template("history.html", transactions = transactions)
-    return apology("TODO")
+    return render_template("history.html", games = games)
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -157,13 +138,10 @@ def quote():
     if request.method == "POST":
 
         # Ensure username was submitted
-        symbol = request.form.get("symbol")
-        if not symbol:
-            return apology("enter valid symbol", 400)
-        stock = lookup(symbol)
-        if not stock:
-            return apology("enter valid symbol", 400)
-        return render_template("quote.html", stock = stock)
+        game = request.form.get("game")
+        if not game:
+            return apology("enter valid game", 400)
+        return render_template("quote.html", game = game)
     # User reached route via GET (as by clicking a link or via redirect)
     else:
         return render_template("quote.html")
@@ -203,33 +181,17 @@ def register():
 @login_required
 def sell():
     """Sell shares of stock"""
-    stocks = db.execute("SELECT symbol, price, SUM(shares) AS total FROM transactions WHERE user_id = ? GROUP BY symbol HAVING total > 0", session["user_id"])
     if request.method == "POST":
         # Ensure username was submitted
-        symbol = request.form.get("symbol").upper()
-        shares = request.form.get("shares")
-        if not symbol:
-            return apology("must provide symbol", 403)
-        elif not shares or not shares.isdigit() or int(shares) <= 0:
-            return apology("must provide shares", 403)
-        else:
-            shares = int(shares)
-
-        for stock in stocks:
-            if stock["symbol"] == symbol:
-                if stock["total"] < shares:
-                    return apology("undo")
-                else:
-                    stock = lookup(symbol)
-                    if stock is None:
-                        return apology("none")
-                    price = stock["price"]
-                    total_cost = price * shares
-
-                    db.execute("UPDATE users SET cash = cash + ? WHERE id = ?", total_cost, session["user_id"])
-                    db.execute("INSERT INTO transactions (user_id, symbol, shares, price) VALUES (:user_id, :symbol, :shares, :price)", user_id = session["user_id"], symbol = symbol, shares = -shares, price = price)
+        game = request.form.get("game")
+        platform = request.form.get("platform")
+        if not game:
+            return apology("must provide game", 403)
+        elif not platform:
+            return apology("must provide platform", 403)
+        db.execute("DELETE FROM games WHERE user_id = ? AND game = ? AND platform = ?", session["user_id"], game, platform)
             # Redirect user to home page
-                    return redirect("/")
+        return redirect("/")
     # User reached route via GET (as by clicking a link or via redirect)
     else:
-        return render_template("sell.html", stocks = stocks)
+        return render_template("sell.html")
