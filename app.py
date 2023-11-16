@@ -53,9 +53,9 @@ def index():
     return render_template("index.html", stocks = stocks, total_value = total_value, cash = cash)
 
 
-@app.route("/buy", methods=["GET", "POST"])
+@app.route("/add", methods=["GET", "POST"])
 @login_required
-def buy():
+def add():
     """Buy shares of stock"""
     if request.method == "POST":
 
@@ -71,17 +71,17 @@ def buy():
         return redirect("/")
     # User reached route via GET (as by clicking a link or via redirect)
     else:
-        return render_template("buy.html")
+        return render_template("add.html")
 
 
-@app.route("/history")
+@app.route("/list")
 @login_required
-def history():
+def list():
     """Show history of transactions"""
     # Ensure username was submitted
     games = db.execute("SELECT * FROM games WHERE user_id = ?", session["user_id"])
     # Redirect user to home page
-    return render_template("history.html", games = games)
+    return render_template("list.html", games = games)
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -131,20 +131,19 @@ def logout():
     return redirect("/")
 
 
-@app.route("/quote", methods=["GET", "POST"])
+@app.route("/info", methods=["GET", "POST"])
 @login_required
-def quote():
-    """Get stock quote."""
+def info():
     if request.method == "POST":
 
         # Ensure username was submitted
         game = request.form.get("game")
         if not game:
             return apology("enter valid game", 400)
-        return render_template("quote.html", game = game)
+        return render_template("info.html", game = game)
     # User reached route via GET (as by clicking a link or via redirect)
     else:
-        return render_template("quote.html")
+        return render_template("info.html")
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -177,10 +176,9 @@ def register():
     else:
         return render_template("register.html")
 
-@app.route("/sell", methods=["GET", "POST"])
+@app.route("/delete", methods=["GET", "POST"])
 @login_required
-def sell():
-    """Sell shares of stock"""
+def delete():
     if request.method == "POST":
         # Ensure username was submitted
         game = request.form.get("game")
@@ -194,4 +192,4 @@ def sell():
         return redirect("/")
     # User reached route via GET (as by clicking a link or via redirect)
     else:
-        return render_template("sell.html")
+        return render_template("delete.html")

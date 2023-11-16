@@ -1,17 +1,17 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Delete
+    Add
 {% endblock %}
 
 {% block main %}
-    <form action="/sell" method="post">
+    <form action="/add" method="post">
         <div class="mb-3">
-            <input class="form-control mx-auto w-auto" id="game" name="game" placeholder="Delete Game" type="text">
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="game" name="game" placeholder="Add Game" type="text">
         </div>
         <div class="mb-3">
             <input class="form-control mx-auto w-auto" id="platform" name="platform" placeholder="Platform" type="text">
         </div>
-        <button class="btn btn-primary" type="submit">Delete</button>
+        <button class="btn btn-primary" type="submit">Add</button>
     </form>
 {% endblock %}
